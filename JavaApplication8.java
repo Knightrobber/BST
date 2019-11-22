@@ -1,10 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package javaapplication8;
-
 import java.lang.Math;
 import java.util.Date;
 import javax.swing.*;
@@ -19,17 +12,68 @@ import java.awt.event.*;
 public class JavaApplication8 extends JFrame{
     
     DrawPanel panel= new DrawPanel();
-     int k=0;
-     int x=100,y=100;
-    
-    JavaApplication8(){
-add(panel);
-setFocusable(true);
-x=100;
-y=0;
-repaint();
-x=200;y=200;
-repaint();
+    JButton button= new JButton("enter");
+    JTextField field= new JTextField();
+    String p =" ";
+    int mov1=0;
+    int mov2=0;
+    JavaApplication8()
+            {
+        
+        
+        
+        setLayout(null);
+        add(panel);
+        setFocusable(true);
+        add(button);
+        Node nodeMain= new Node(20);
+   
+    nodeMain.left=null;
+    nodeMain.right=null;
+button.setBounds(350, 0, 50, 20);
+field.setBounds(250, 0, 100, 20);
+add(field);
+field.setText("-10");
+ JLabel label1= new JLabel(String.valueOf(nodeMain.value));
+ add(label1);
+ label1.setBackground(Color.red);
+ label1.setOpaque(true);
+ label1.setBounds(300, 100-22,25,25);
+ button.addActionListener(new ActionListener(){
+   
+     
+     public void actionPerformed(ActionEvent e){
+    int left=300;int down=100;
+         int val= Integer.parseInt(field.getText());
+        
+         JLabel label = new JLabel(field.getText());
+         
+         String s= insertNode(val,nodeMain,left,down);
+         String[] nums= s.split("\\s+");
+         add(label);
+         int[] numsInt={300,100,300,100};
+         numsInt[0]= Integer.parseInt(nums[0]);
+         numsInt[1]= Integer.parseInt(nums[1]);
+         numsInt[2]= Integer.parseInt(nums[2]);
+         numsInt[3]= Integer.parseInt(nums[3]);
+         label.setBounds(numsInt[0],numsInt[1]-22, 20, 20);  // messy part
+         label.setBackground(Color.red);
+         label.setOpaque(true);
+         Graphics g=getGraphics();
+         g.drawLine(numsInt[2] +10 , numsInt[3] +10 , numsInt[0]+10, numsInt[1]+10); // messy part
+         System.out.println(nums[2]+" " +nums[3]+"     " +nums[0]+" " +nums[1]);
+         System.out.println(numsInt[0]+  " " +numsInt[1]+  " "+numsInt[2]+  " "+numsInt[3]+  " ");
+         System.out.println();
+         
+         
+         
+         
+         
+
+   }
+   
+   });
+
 
     }
     
@@ -45,80 +89,86 @@ repaint();
         JFrame frame= new JavaApplication8();
       frame.setSize(800,800);
       frame.setVisible(true);
-        
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    public void paint(Graphics g){
-    Graphics j=this.getGraphics();
-    j.drawLine(10, 10, x,y);
-    }
+
+    
+    
+    
+    
+    
     
     private class DrawPanel extends JPanel{
-    
+     
         DrawPanel(){
-        x=100;y=0;
-        repaint();
-            
-            /*Node nodeMain= new Node(20);
-insertNode(10,nodeMain);
-insertNode(21,nodeMain);
-insertNode(9,nodeMain);
-insertNode(8,nodeMain);
-insertNode(15,nodeMain);
-insertNode(13,nodeMain);
-insertNode(16,nodeMain);
-System.out.println("i came");
-preOrder(nodeMain,200,100);
-*/
-        
-
         }
+    
+        void preOrder(Node nodeMain,int left,int down){
+     
+if(nodeMain==null)
+return;
+String a= Integer.toString(nodeMain.value);
+   JLabel label123 = new JLabel(a);
+   label123.setBounds(left,down,30,30);
+ System.out.println(left + " " + down);
+ add(label123);
+      
+preOrder(nodeMain.left,left-30,down+30);
+preOrder(nodeMain.right,left+30,down+30);
+
+}
+        
     
     }
     
     
     
-    void insertNode(int value,Node nodeMain){
+    String insertNode(int value,Node nodeMain,int left,int down){
 Node newNode= new Node(value);
 if(nodeMain.value>newNode.value && nodeMain.left!=null){
-insertNode(newNode.value,nodeMain.left);
+    if(left==300 && down==100)
+       insertNode(newNode.value,nodeMain.left,left-100,down+60);
+    else
+insertNode(newNode.value,nodeMain.left,left-30,down+30);
 }
 
 else if(nodeMain.value<newNode.value && nodeMain.right!=null){
-insertNode(newNode.value,nodeMain.right);
+    if(left==300 && down==100)
+        insertNode(newNode.value,nodeMain.right,left+100,down+60);
+    else
+insertNode(newNode.value,nodeMain.right,left+30,down+30);
 }
 
 else if(nodeMain.left==null && nodeMain.value>newNode.value)
+{ 
     nodeMain.left=newNode;
 
-else if(nodeMain.right==null&& nodeMain.value<newNode.value)
-    nodeMain.right=newNode;
-}
-
-void preOrder(Node nodeMain,int left,int down){
-     
-
-    addKeyListener(new KeyAdapter(){
-    public void keyPressed(KeyEvent e){
-    k=1;
-        Graphics g= panel.getGraphics();
-        g.drawLine(10, 10, 100, 100);
-        
-        
-    }
     
-    });
-     
-     System.out.println("yo");
-
-    System.out.println(nodeMain.value);
-if(k==1){
-if(nodeMain.left!=null)
-    preOrder(nodeMain.left,left-30,down+30);
-if(nodeMain.right!=null)
-    preOrder(nodeMain.right,left+30,down+30);
+    if(left==300 && down==100)
+     p= String.valueOf(left-100) +" " +  String.valueOf(down+60)+" " +  String.valueOf(left) +" " +  String.valueOf(down);
+    else
+        p= String.valueOf(left-30) +" " +  String.valueOf(down+30)+" " +  String.valueOf(left) +" " +  String.valueOf(down);
+    return p;
+    
+    
 
 }
+else if(nodeMain.right==null&& nodeMain.value<newNode.value)
+{  nodeMain.right=newNode;
+
+    if(left==300 && down==100)
+     p= String.valueOf(left+100) +" " +  String.valueOf(down+60) +" " +  String.valueOf(left) +" " +  String.valueOf(down) ;
+    
+    else
+         p= String.valueOf(left+30) +" " +  String.valueOf(down+30) +" " +  String.valueOf(left) +" " +  String.valueOf(down) ;
+    return p;
+    
 }
+return p;
+
+        }
+
+
 
 
 
